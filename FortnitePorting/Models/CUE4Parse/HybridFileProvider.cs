@@ -74,8 +74,9 @@ public class HybridFileProvider : AbstractVfsFileProvider
             {
                 try
                 {
-                    var ioChunkToc = new IoChunkToc(file.FullName);
-                    RegisterVfs(ioChunkToc, OnDemandOptions);
+                    var archive = new FByteArchive(file.FullName, File.ReadAllBytes(file.FullName), Versions);
+                    var ioChunkToc = new FOnDemandTocReader(archive);
+                    RegisterVfs(ioChunkToc);
                 }
                 catch (Exception e)
                 {
@@ -122,8 +123,9 @@ public class HybridFileProvider : AbstractVfsFileProvider
                         file.GetStream().CopyTo(fileStream);
                     }
 
-                    var ioChunkToc = new IoChunkToc(targetPath);
-                    RegisterVfs(ioChunkToc, OnDemandOptions);
+                    var archive = new FByteArchive(targetPath, File.ReadAllBytes(targetPath), Versions);
+                    var ioChunkToc = new FOnDemandTocReader(archive);
+                    RegisterVfs(ioChunkToc);
                 }
                 catch (Exception e)
                 {
